@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
+using TMPro;
+using System.Runtime.Remoting.Messaging;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class GameManager : MonoBehaviour
     [Header("Spawn")]
     public List<GameObject> targets;
     private float spawnRate = 3f;
+    public GameObject menu;
     [Header("Game & variables")]
     public bool isGameActive;
     private int lives = 3;
@@ -19,10 +22,14 @@ public class GameManager : MonoBehaviour
 
     [Header("Texts")]
     public static GameManager Instance;
-    public Text livesText;
-    public Text scoreText;
-    public Text timeText;
+    public TextMeshProUGUI livesText;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI timeText;
+    public Canvas endCanvas;
 
+    [Header("Game Over")]
+    public XRRayInteractor rightRay;
+    public XRRayInteractor leftRay;
 
     public enum Mode
     {
@@ -33,15 +40,29 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Instance = this;
+        StartLevel();
+    }
+
+    public void StartLevel()
+    {
+        isGameActive = true;
         StartCoroutine(Spawntargets());
-        UpdateScore(0);
+        endCanvas.gameObject.SetActive(false);
+        UpdateScore(-score);
+        lives = 3;
+        livesText.text = "Lives: " + lives;
         if (mode == Mode.Arcade)
         {
             StartCoroutine(Timer());
-            
         }
     }
 
+    public void Menu()
+    {
+        menu.SetActive(true);
+        endCanvas.gameObject.SetActive(false);
+        transform.parent.gameObject.SetActive(false);
+    }
     
     public void UpdateScore(int points)
     {
@@ -56,21 +77,32 @@ public class GameManager : MonoBehaviour
             case Mode.Classic:
                 if (lives <= 1f)
                 {
-                    isGameActive = false;
+                    GameOver();
                 }
-                lives--;
-                livesText.text = "Lives :" + lives;
-
+                lives--;    
+                livesText.text = "Lives: " + lives;
+                
                 break;
             case Mode.Arcade:
-                UpdateScore(-points);
-                Debug.Log("Penality");
-                
+                if (score >= 0)
+                {
+                    UpdateScore(-points);
+                    Debug.Log("Penality");
+                }
+                else UpdateScore(-score);
                 break;
             default:
                 break;
-        }
-        
+        }        
+    }
+
+    public void GameOver()
+    {
+        StopAllCoroutines();
+        endCanvas.gameObject.SetActive(true);
+        isGameActive = false;
+        rightRay.enabled = true;
+        leftRay.enabled = true;
     }
 
     IEnumerator Spawntargets()
@@ -95,6 +127,6 @@ public class GameManager : MonoBehaviour
 
         }
 
-        isGameActive = false;
+        GameOver();
     }
 }

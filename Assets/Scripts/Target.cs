@@ -9,7 +9,8 @@ public class Target : MonoBehaviour
     public ParticleSystem explosionParticle;
     private Rigidbody targetRb;
     private GameManager gameManager;
-
+    public AudioSource audio;
+    public AudioClip slash;
      
 
     private float minSpeed = 8f;
@@ -37,13 +38,12 @@ public class Target : MonoBehaviour
         {
             Instantiate(explosionParticle, transform.position, transform.rotation);
             gameManager.UpdateScore(pointValue);
-        Destroy(gameObject);
+            Destroy(gameObject);
         }
-        if (other.CompareTag("Dead"))
+        if (other.gameObject.CompareTag("Dead"))
         {
-            gameManager.Penality(pointValue);
-            
-        Destroy(gameObject);
+            gameManager.Penality(pointValue);            
+            Destroy(gameObject);
         }
     }
     Vector3 RandomForce()
@@ -65,6 +65,7 @@ public class Target : MonoBehaviour
         if (gameManager.isGameActive)
         {
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+            audio.PlayOneShot(slash, 1f);
             Destroy(gameObject);
             
         }

@@ -8,6 +8,11 @@ public class ModeSelect : MonoBehaviour
     [SerializeField] private GameObject mode;
     private GameManager gameManager;
     public ParticleSystem explosionParticle;
+    public AudioSource audio;
+    public AudioClip slash;
+
+
+
     private void Awake()
     {
         gameManager = GameManager.Instance;
@@ -28,9 +33,10 @@ public class ModeSelect : MonoBehaviour
     IEnumerator DisableMenu()
     {
 
-        explosionParticle.Play();
+        Instantiate(explosionParticle, transform.position, transform.rotation);
+        audio.PlayOneShot(slash, 1f);
         mode.SetActive(true);
-        gameObject.GetComponent<MeshRenderer>().enabled = false;
+        
         yield return new WaitForSeconds(0.1f);
         gameObject.transform.parent.gameObject.SetActive(false);
     }
