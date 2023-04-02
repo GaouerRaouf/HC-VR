@@ -3391,6 +3391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targets:
   - {fileID: 2642987062510281035, guid: 9b6067fd6d5cc9a48a225f984b7c7210, type: 3}
+  - {fileID: 9151889749926845942, guid: c0f6dc91d6eb3114391dfc7ee78c0bf2, type: 3}
   isGameActive: 1
   livesText: {fileID: 746202045}
   scoreText: {fileID: 792862245}

@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     public void AddTime(int value)
     {
-        notif.text = "+" + value.ToString();
+        notif.text = "+" + value.ToString() + " sec";
         timer += value;
     }
     public void EndGame()
