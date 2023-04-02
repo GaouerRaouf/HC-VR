@@ -9,7 +9,6 @@ public class Target : MonoBehaviour
     public ParticleSystem explosionParticle;
     private Rigidbody targetRb;
     private GameManager gameManager;
-
      
 
     private float minSpeed = 8f;
@@ -29,21 +28,27 @@ public class Target : MonoBehaviour
 
     }
 
-    
-    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Sword"))
         {
             Instantiate(explosionParticle, transform.position, transform.rotation);
             gameManager.UpdateScore(pointValue);
-        Destroy(gameObject);
+            Destroy(gameObject);
+            if (gameObject.tag.Equals("Bomb"))          //If the target is a bomb the game is over
+            {
+                gameManager.EndGame();
+            }
+            if (gameObject.tag.Equals("Gift"))         //If the target is a gift time will be added
+            {
+                gameManager.AddTime(5);
+                Debug.Log("Added 5 seconds");
+            }
         }
         if (other.CompareTag("Dead"))
         {
             gameManager.Penality(pointValue);
-            
-        Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
     Vector3 RandomForce()

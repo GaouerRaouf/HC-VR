@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public Text livesText;
     public Text scoreText;
     public Text timeText;
+    public Text notif;
 
 
     public enum Mode
@@ -42,7 +43,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+    public void AddTime(int value)
+    {
+        notif.text = "+" + value.ToString();
+        timer += value;
+    }
+    public void EndGame()
+    {
+        Debug.Log("ENDGAME");
+    }
     public void UpdateScore(int points)
     {
         score += points;
@@ -83,14 +92,13 @@ public class GameManager : MonoBehaviour
 
         }
     }
-
-
     IEnumerator Timer()
     {
         while (timer>0)
         {
         yield return new WaitForSeconds(1f);
-        timer--;
+            timer--;
+            if (!notif.text.Equals("")) notif.text = "";
         timeText.text = "Time left: " + timer + "s";
 
         }
@@ -98,3 +106,4 @@ public class GameManager : MonoBehaviour
         isGameActive = false;
     }
 }
+
