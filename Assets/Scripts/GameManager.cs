@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Runtime.Remoting.Messaging;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class GameManager : MonoBehaviour
@@ -45,6 +44,7 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
+        rightRay.enabled = false;
         isGameActive = true;
         StartCoroutine(Spawntargets());
         endCanvas.gameObject.SetActive(false);
