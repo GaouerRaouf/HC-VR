@@ -71,7 +71,8 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 82cdba7f4571dae4c93dffd0d73eb13d, type: 3}
 --- !u!1 &953180363662427631 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: 82cdba7f4571dae4c93dffd0d73eb13d, type: 3}
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 82cdba7f4571dae4c93dffd0d73eb13d,
+    type: 3}
   m_PrefabInstance: {fileID: 953180363662525263}
   m_PrefabAsset: {fileID: 0}
 --- !u!54 &168511643
@@ -212,7 +213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72756f29c7c097744b4f23068430ddd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionParticle: {fileID: 2478549635105912040, guid: ec46c8c4a3cbc429382ee48bd9169b45, type: 3}
+  explosionParticle: {fileID: 2478549635105912040, guid: ec46c8c4a3cbc429382ee48bd9169b45,
+    type: 3}
   audio: {fileID: 3094001781300802325, guid: a4383fccbddf3a444a28ddc06d310c76, type: 3}
   slash: {fileID: 8300000, guid: e8f591f1e1da6f5409e87f9ba6d781a5, type: 3}
   pointValue: 4

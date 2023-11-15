@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Spawn")]
     public List<GameObject> targets;
-    private float spawnRate = 3f;
+    [SerializeField] private float spawnRate = 3f;
     public GameObject menu;
     [Header("Game & variables")]
     public bool isGameActive;
@@ -24,11 +25,12 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI timeText;
-    public Canvas endCanvas;
+    public GameObject endCanvas;
 
     [Header("Game Over")]
-    public XRRayInteractor rightRay;
-    public XRRayInteractor leftRay;
+    [SerializeField] XRRayInteractor rightRay;
+    [SerializeField] XRRayInteractor leftRay;
+    private GameObject[] swords;
 
     public enum Mode
     {
@@ -39,15 +41,21 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Instance = this;
+        swords = GameObject.FindGameObjectsWithTag("Sword");
         StartLevel();
     }
 
     public void StartLevel()
     {
         rightRay.enabled = false;
+        leftRay.enabled = false;
+        foreach(GameObject sword in swords)
+        {
+            sword.SetActive(true);
+        }
         isGameActive = true;
         StartCoroutine(Spawntargets());
-        endCanvas.gameObject.SetActive(false);
+        endCanvas.SetActive(false);
         UpdateScore(-score);
         lives = 3;
         livesText.text = "Lives: " + lives;
@@ -60,7 +68,7 @@ public class GameManager : MonoBehaviour
     public void Menu()
     {
         menu.SetActive(true);
-        endCanvas.gameObject.SetActive(false);
+        endCanvas.SetActive(false);
         transform.parent.gameObject.SetActive(false);
     }
     
@@ -99,7 +107,11 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         StopAllCoroutines();
-        endCanvas.gameObject.SetActive(true);
+        foreach (GameObject sword in swords)
+        {
+            sword.SetActive(false);
+        }
+        endCanvas.SetActive(true);
         isGameActive = false;
         rightRay.enabled = true;
         leftRay.enabled = true;
@@ -111,10 +123,45 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnRate);
             int index = Random.Range(0, targets.Count);
-            Instantiate(targets[index]);
+            GameObject newTarget = Instantiate(targets[index]);
 
+            // Enable slicing by adding a collider and rigidbody to the target
+            Collider targetCollider = newTarget.GetComponent<Collider>();
+            if (targetCollider != null)
+            {
+                targetCollider.enabled = true;
+            }
+
+            Rigidbody targetRigidbody = newTarget.GetComponent<Rigidbody>();
+            if (targetRigidbody != null)
+            {
+                targetRigidbody.isKinematic = false;
+            }
+
+            // Cast a ray from each sword to check for slicing
+            foreach (GameObject sword in swords)
+            {
+                Ray ray = new Ray(sword.transform.position, sword.transform.forward);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.collider.gameObject == newTarget)
+                    {
+                        // Get the SwordSlicer script from the sword object
+                        SwordSlicer swordSlicer = hit.collider.gameObject.GetComponent<SwordSlicer>();
+                        if (swordSlicer != null)
+                        {
+                            // Call the SliceObject method on the SwordSlicer script
+                            swordSlicer.SliceObject(newTarget);
+                        }
+                    }
+                }
+            }
         }
     }
+
+
+
 
 
     IEnumerator Timer()

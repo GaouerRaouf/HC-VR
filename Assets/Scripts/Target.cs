@@ -13,10 +13,10 @@ public class Target : MonoBehaviour
     public AudioClip slash;
      
 
-    private float minSpeed = 8f;
-    private float maxSpeed = 10f;
+    private float minSpeed = 10f;
+    private float maxSpeed = 13f;
     private float minTorque = 10;
-    private float maxTorque = 10;
+    private float maxTorque = 15;
     private float xRange = 1.5f;
     public int pointValue;
     // Start is called before the first frame update
@@ -30,16 +30,23 @@ public class Target : MonoBehaviour
 
     }
 
-    
-    
+
+    public void SliceTarget(RaycastHit hit)
+    {
+        Instantiate(explosionParticle, transform.position, transform.rotation);
+        gameManager.UpdateScore(pointValue);
+        Destroy(gameObject);
+    }
+
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Sword"))
-        {
-            Instantiate(explosionParticle, transform.position, transform.rotation);
-            gameManager.UpdateScore(pointValue);
-            Destroy(gameObject);
-        }
+     //   if (other.gameObject.CompareTag("Sword"))
+     //   {
+     //       Instantiate(explosionParticle, transform.position, transform.rotation);
+     //       gameManager.UpdateScore(pointValue);
+     //       Destroy(gameObject);
+     //   }
         if (other.gameObject.CompareTag("Dead"))
         {
             gameManager.Penality(pointValue);            
@@ -56,7 +63,7 @@ public class Target : MonoBehaviour
     }
     Vector3 RandomPosition()
     {
-        return new Vector3(Random.Range(-xRange, xRange), 0, 4.5f);
+        return new Vector3(Random.Range(-xRange, xRange), 3,-0.4f);
     }
 
         
